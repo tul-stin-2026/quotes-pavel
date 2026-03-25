@@ -20,6 +20,19 @@ public class QuoteController {
     public List<Quote> getQuotes() {
         return quotes;
     }
+
+    @PostMapping // endpoint pro odesílání dat
+    public Quote addQuote(@RequestBody Quote quote) { // @RequestBody - Spring vezme JSON a převede ho na objekt Quote
+
+        // jednoduché generování ID
+        quote.setId((long) (quotes.size() + 1));
+
+        quotes.add(quote);
+
+        return quote;
+    }
 }
 
 // Teď už vracíme JSON – tohle je skutečné REST API.
+
+// Teď budeme data nejen číst, ale i posílat do serveru.
