@@ -5,6 +5,6 @@ import lombok.Data;
 // externí API má jiný JSON než náš model
 @Data
 public class ExternalQuote {
-    private String content;
-    private String author;
+    private String q;  // text
+    private String a;  // author
 }

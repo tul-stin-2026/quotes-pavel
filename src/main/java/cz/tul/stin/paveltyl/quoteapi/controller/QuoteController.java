@@ -1,7 +1,11 @@
 package cz.tul.stin.paveltyl.quoteapi.controller;
 
+import cz.tul.stin.paveltyl.quoteapi.model.ExternalQuote;
 import cz.tul.stin.paveltyl.quoteapi.model.Quote;
 import org.springframework.web.bind.annotation.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +15,8 @@ import java.util.List;
 public class QuoteController {
 
     private final List<Quote> quotes = new ArrayList<>();
+    @Autowired
+    private RestTemplate restTemplate;
 
     public QuoteController() {
         quotes.add(new Quote(1L, "Komu se nelení, tomu se zelení", "Unknown Grandma"));
@@ -45,5 +51,26 @@ public class QuoteController {
                 .filter(q -> q.getId().equals(id))
                 .findFirst()
                 .orElseThrow();
+    }
+
+    @GetMapping("/random")
+    public Quote getRandomQuote() {
+
+        String url = "https://zenquotes.io/api/random";
+
+        ExternalQuote[] response =
+                restTemplate.getForObject(url, ExternalQuote[].class);
+
+        if (response == null || response.length == 0) {
+            throw new RuntimeException("External API returned no data");
+        }
+
+        ExternalQuote external = response[0];
+
+        return new Quote(
+                null,
+                external.getQ(),
+                external.getA()
+        );
     }
 }
