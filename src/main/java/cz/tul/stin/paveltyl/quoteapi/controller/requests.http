@@ -1,5 +1,5 @@
 # Tohle je alternativa k Postmanu, curl a je výhoda, že je to přímo v IDE a můžeme si ukládat requesty.
-# Tenhle soubor si necháme celou dobu.
+# Tenhle soubor si necháme celou dobu a bude takovou naší minidokumentací API.
 # Mezi hlavičkou a JSON musí být volný řádek.
 # Když dostaneme 405 nebo endpoint neexistuje, zkontrolujeme, jestli běží aktuální verze aplikace
 # a zda Tomcat nemá v paměti starou verzi controlleru.
@@ -13,3 +13,10 @@ Content-Type: application/json
   "text": "Učení nikdy nevyčerpá mysl.",
   "author": "Leonardo da Vinci"
 }
+
+### Oddelení requestů
+
+# Tohle je typický REST pattern, práce s konkrétním zdrojem.
+# Když ID neexistuje, dostaneme error (500 - Internal Server Error).
+# Zatím neřešíme chyby.
+GET http://localhost:8080/quotes/3
