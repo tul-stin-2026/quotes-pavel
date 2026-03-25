@@ -1,3 +1,11 @@
+# Tohle je alternativa k Postmanu, curl a je výhoda, že je to přímo v IDE a můžeme si ukládat requesty.
+# Tenhle soubor si necháme celou dobu.
+# Mezi hlavičkou a JSON musí být volný řádek.
+# Když dostaneme 405 nebo endpoint neexistuje, zkontrolujeme, jestli běží aktuální verze aplikace
+# a zda Tomcat nemá v paměti starou verzi controlleru.
+# Spring Boot aplikace se musí restartovat po změně kódu, jinak běží stará verze.
+
+# Přidání nového citátu
 POST http://localhost:8080/quotes
 Content-Type: application/json
 
