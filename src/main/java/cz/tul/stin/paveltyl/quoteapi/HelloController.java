@@ -11,5 +11,4 @@ public class HelloController {
         return "Hello SpringBoot, Maven, Lombok, REST!";
     }
 }
-
 // Teď jsme poprvé vytvořili vlastní REST endpoint.
