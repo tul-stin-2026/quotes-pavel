@@ -17,5 +17,5 @@ public class QuotesApplication {
     @Bean
     public RestTemplate restTemplate() { // = nástroj pro HTTP volání
         return new RestTemplate();
-    }
+    } // RestTemplate = nástroj pro HTTP volání
 }

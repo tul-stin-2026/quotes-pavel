@@ -10,25 +10,26 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
-@RequestMapping("/quotes")
+@RestController // Anotace - Tato třída je REST controller (přijímá HTTP requesty, vrací JSON)
+@RequestMapping("/quotes") // Anotace - Všechny endpointy v této třídě začínají /quotes.
 public class QuoteController {
 
-    private final List<Quote> quotes = new ArrayList<>();
-    @Autowired
+    private final List<Quote> quotes = new ArrayList<>(); // 1
+    @Autowired // Anotace - Spring sem má automaticky dodat objekt.
     private RestTemplate restTemplate;
 
     public QuoteController() {
-        quotes.add(new Quote(1L, "Komu se nelení, tomu se zelení", "Unknown Grandma"));
-    }
+        quotes.add(new Quote(1L, "Komu se nelení, tomu se zelení.", "Neznámá babička"));
+    } // 1
 
     @GetMapping
-    public List<Quote> getQuotes() {
+    public List<Quote> getQuotes() { // 1
+
         return quotes;
     }
     // Teď už vracíme JSON – tohle je skutečné REST API.
 
-    @PostMapping // endpoint pro odesílání dat
+    @PostMapping // Endpoint pro odesílání dat // 2
     public Quote addQuote(@RequestBody Quote quote) { // @RequestBody - Spring vezme JSON a převede ho na objekt Quote
 
         // jednoduché generování ID
@@ -44,13 +45,17 @@ public class QuoteController {
     // Teď nechceme všechno, ale jen jeden konkrétní záznam.
     // {id} - část URL, která se mění
     // @PathVariable - vezme hodnotu z URL a předá ji do metody
-    @GetMapping("/{id}")
-    public Quote getQuote(@PathVariable Long id) {
+    @GetMapping("/{id}") // Tahle metoda reaguje na GET request s parametrem v URL.
+    public Quote getQuote(@PathVariable Long id) { // Metoda vrací jeden objekt Quote.
+                                                   // Hodnota z URL (/quotes/1) se uloží do proměnné id.
 
-        return quotes.stream()
-                .filter(q -> q.getId().equals(id))
-                .findFirst()
-                .orElseThrow();
+        // Najdi v seznamu první citát, který má dané ID. Pokud existuje, vrať ho. Pokud ne, vyhoď chybu.
+        return quotes.stream() // Vezmeme seznam a začneme ho zpracovávat jako stream, procházíme zjednodušeně všechny prvky
+                .filter(q -> q.getId().equals(id)) // Vybereme jen ty citáty, které mají stejné ID.
+                                                         // Pro každý prvek q zkontroluj, jestli jeho ID odpovídá hledanému ID.
+                .findFirst()                             // Vezmeme první nalezený výsledek.
+                                                         // Buď najde a vrátí hodnotu nebo nenajde a je tam prázdno.
+                .orElseThrow();                          // Pokud nic nenajdeme, vyhodíme výjimku.
     }
 
     @GetMapping("/random")
@@ -85,3 +90,5 @@ public class QuoteController {
         return quote;
     }
 }
+
+// Teď kombinujeme vlastní logiku, externí API a ukládání dat.
