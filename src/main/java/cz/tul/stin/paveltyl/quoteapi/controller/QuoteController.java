@@ -90,5 +90,4 @@ public class QuoteController {
         return quote;
     }
 }
-
 // Teď kombinujeme vlastní logiku, externí API a ukládání dat.
