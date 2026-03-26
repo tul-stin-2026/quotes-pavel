@@ -25,3 +25,7 @@ GET http://localhost:8080/quotes/1
 ###
 # Náhodný citát z externího API
 GET http://localhost:8080/quotes/random
+
+###
+# Uložení náhodného citátu z externího API
+POST http://localhost:8080/quotes/random
