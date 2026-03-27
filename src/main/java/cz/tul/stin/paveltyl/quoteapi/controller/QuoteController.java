@@ -39,7 +39,7 @@ public class QuoteController {
 
         return quote;
     }
-    // Teď budeme data nejen číst, ale i posílat do serveru.
+    // Teď budeme data nejen číst, ale i posílat na server.
 
     // Parametr v URL (path variable)
     // Teď nechceme všechno, ale jen jeden konkrétní záznam.
