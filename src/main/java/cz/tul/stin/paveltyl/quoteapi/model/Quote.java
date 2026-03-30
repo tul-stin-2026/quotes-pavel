@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// Teď si vytvoříme objekt, který budeme vracet jako JSON.
+// Vytvoření objektu, který se bude vracet jako JSON.
 // Lombok generuje gettery/settery a zjednodušuje modely, používáme ho pro pohodlí, ale je dobré rozumět i klasickému Java kódu.
 @Data // = getter + setter + toString
 @AllArgsConstructor // = konstruktor
@@ -15,5 +15,4 @@ public class Quote {
     private String text;
     private String author;
 }
-
 // Spring automaticky převede tento objekt na JSON.
