@@ -21,8 +21,8 @@ public class QuoteService {
 
     private static final String RANDOM_QUOTE_URL = "https://zenquotes.io/api/random";
 
-    @Getter
-    private final List<Quote> quotes = new ArrayList<>();
+    // @Getter
+    // private final List<Quote> quotes = new ArrayList<>();
     private final RestOperations restOperations;
 
     // NOVĚ:
@@ -36,11 +36,40 @@ public class QuoteService {
         // quotes.add(new Quote(1L, "Komu se nelení, tomu se zelení.", "Neznámá babička"));
     }
 
+    /*
     public Quote addQuote(Quote quote) {
         // jednoduché generování ID
         quote.setId((long) (quotes.size() + 1));
         quotes.add(quote);
         return quote;
+    }
+     */
+
+    public List<Quote> getQuotes() {
+
+        // DŘÍVE:
+        // Service vracela svůj vlastní interní seznam quotes.
+
+        // NYNÍ:
+        // Service si o celý seznam řekne repository.
+
+        // PROČ:
+        // Po refaktoru chceme mít čtení i zápis dat přes repository, ne přes starý interní seznam.
+        return quoteRepository.findAll();
+    }
+
+    public Quote addQuote(Quote quote) {
+
+        // DŘÍVE:
+        // Service sama přidělovala id a sama ukládala citát do interního seznamu quotes.
+
+        // NYNÍ:
+        // Service už nebude sama řešit ukládání.
+        // Předá objekt Quote do repository a repository rozhodne, jak se uložení provede.
+
+        // PROČ:
+        // Chceme oddělit logiku service od práce s daty.
+        return quoteRepository.save(quote);
     }
 
     public Quote getRandomQuote() {
@@ -70,6 +99,7 @@ public class QuoteService {
         // return addQuote(getRandomQuote());
     }
 
+    /*
     public Quote getQuote(Long id) {
 
         // Najdi v seznamu první citát, který má dané ID. Pokud existuje, vrať ho. Pokud ne, vyhoď chybu.
@@ -79,6 +109,28 @@ public class QuoteService {
                 .findFirst()                             // Vezmeme první nalezený výsledek.
                 // Buď najde a vrátí hodnotu nebo nenajde a je tam prázdno.
                 .orElseThrow(() -> new NoSuchElementException("Quote with id " + id + " not found."));                          // Pokud nic nenajdeme, vyhodíme výjimku.
+    }
+     */
+
+    public Quote getQuote(Long id) {
+
+        // DŘÍVE:
+        // Service sama procházela interní seznam quotes a sama hledala odpovídající objekt.
+
+        // NYNÍ:
+        // Service deleguje hledání na repository.
+
+        // PROČ:
+        // Vyhledávání dat patří do repository vrstvy, ne přímo do service.
+        Quote quote = quoteRepository.findById(id);
+
+        // Repository v aktuální jednoduché implementaci vrací null, když objekt nenajde.
+        // Proto zde stále převádíme "nenalezeno" na výjimku, kterou očekává zbytek aplikace.
+        if (quote == null) {
+            throw new NoSuchElementException("Quote with id " + id + " not found.");
+        }
+
+        return quote;
     }
 }
 /*
