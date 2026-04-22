@@ -159,17 +159,33 @@ class QuoteServiceTest {
                 eq(ExternalQuote[].class)
         )).thenReturn(new ExternalQuote[]{externalQuote});
 
-        // Tady si připravíme objekt, který bude "uložený".
-        // Simulujeme tím situaci, že repository při ukládání doplní id.
-        Quote savedQuote = new Quote();
-        savedQuote.setId(100L);
-        savedQuote.setText("Uložený testovací citát.");
-        savedQuote.setAuthor("Testovací autor");
+        // DŘÍVE:
+        // Mock repository vracel pořád ten samý předem připravený objekt přes thenReturn(...).
 
-        // Tady nastavujeme druhý mock.
-        // Když repository dostane nějaký Quote k uložení,
-        // vrátí prepared objekt savedQuote.
-        when(quoteRepository.save(any(Quote.class))).thenReturn(savedQuote);
+        // NYNÍ:
+        // Mock repository bude reagovat na to, jaký objekt do něj service skutečně pošle.
+        // A to je realističtější, protože při ukládání často vzniká výsledek podle vstupu.
+        when(quoteRepository.save(any(Quote.class))).thenAnswer(invocation -> {
+
+            // Z invocation si vytáhneme první argument,
+            // tedy objekt Quote, který service poslala do repository.save(...).
+            Quote quoteToSave = invocation.getArgument(0);
+
+            // Vytvoříme nový objekt, který bude představovat "uložený" quote.
+            Quote savedQuote = new Quote();
+
+            // Simulujeme, že při uložení repository přidělí id.
+            savedQuote.setId(100L);
+
+            // Zachováme text z objektu, který service poslala k uložení.
+            savedQuote.setText(quoteToSave.getText());
+
+            // Zachováme autora z objektu, který service poslala k uložení.
+            savedQuote.setAuthor(quoteToSave.getAuthor());
+
+            // Vrátíme objekt tak, jako by byl právě uložen do databáze nebo jiného úložiště.
+            return savedQuote;
+        });
 
         // Zavoláme testovanou metodu.
         Quote result = quoteService.saveRandomQuote();
